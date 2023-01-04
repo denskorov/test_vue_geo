@@ -1,8 +1,9 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/map">Map</router-link>
+    <router-link :to="{ name: 'home' }">Головна</router-link> |
+    <router-link :to="{ name: 'map' }">Мапа</router-link>
   </nav>
+  <hr />
   <router-view />
 </template>
 

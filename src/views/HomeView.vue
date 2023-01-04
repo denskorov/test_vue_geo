@@ -1,51 +1,82 @@
 <template>
-  <div class="home">
-    <h3>Posts</h3>
-    <div>
-      <p>Filter by title:</p>
-      <div><input type="text" v-model="filterText" /></div>
+  <div class="home container">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3>Пости</h3>
+      <div class="d-flex align-items-center">
+        <label class="m-0 mr-3 w-50">Фільтрувати за заголовком:</label>
+        <input type="text" class="form-control" v-model="filterText" />
+      </div>
     </div>
     <hr />
-    <div>
-      <button @click="toPrev" :disabled="!canGoToPrev || loading">
-        Prev page
-      </button>
-      <button style="margin-right: 15px" @click="toNext" :disabled="loading">
-        Next page
-      </button>
-      <b>Page: {{ page }}</b>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <button
+          @click="toPrev"
+          :disabled="!canGoToPrev || loading"
+          class="btn border mr-2"
+        >
+          Попередня стрінка
+        </button>
+        <button
+          style="margin-right: 15px"
+          @click="toNext"
+          :disabled="loading"
+          class="btn border"
+        >
+          Наступна сторінка
+        </button>
+        <span class="mr-2"
+          >Сторінка: <b>{{ page }}</b></span
+        >
+      </div>
+      <div>
+        <span class="mr-4">Постів на сторінці:</span>
+        <select @change="updateLimit" :value="limit">
+          <option value="2">2</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+        </select>
+      </div>
     </div>
-    <hr />
     <template v-if="!loading">
-      <ul>
-        <li v-for="post in filteredPosts" :key="post.id" style="display: flex">
-          <div style="flex-basis: 50%">
-            <h4>{{ post.title }}</h4>
-            <p>{{ post.body }}</p>
-            <p>
-              Count of comments:
-              <b>{{ post.comments.length }}</b>
-            </p>
-          </div>
-          <div>
-            <Doughnut
-              :options="{
-                responsive: true,
-                maintainAspectRatio: false,
-              }"
-              :data="post.chartData"
-            />
+      <ul class="p-0 m-0">
+        <li v-for="post in filteredPosts" :key="post.id" style="display: block">
+          <hr />
+          <div class="d-flex justify-content-between">
+            <div class="flex-grow-1 p-3">
+              <h4>{{ post.title }}</h4>
+              <p>{{ post.body }}</p>
+              <p>
+                Count of comments:
+                <b>{{ post.comments.length }}</b>
+              </p>
+            </div>
+            <div class="text-center border-left p-3" style="max-width: 350px">
+              <h6>Статистика літер у `email` авторів коментарів</h6>
+              <div>
+                <Doughnut
+                  :options="{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                  }"
+                  :data="post.chartData"
+                />
+              </div>
+            </div>
           </div>
         </li>
       </ul>
     </template>
-    <template v-else> Loading </template>
+    <template v-else>
+      <div class="pt-5 text-center">Loading...</div>
+    </template>
   </div>
 </template>
 
 <script>
 import { Doughnut } from "vue-chartjs";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default {
@@ -121,6 +152,11 @@ export default {
           },
         ],
       };
+    },
+    async updateLimit(e) {
+      this.page = 1;
+      this.limit = e.target.value;
+      await this.getPosts();
     },
   },
 };

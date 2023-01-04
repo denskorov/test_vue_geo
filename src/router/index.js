@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import MapView from "../views/MapView";
+import HomeView from "@/views/HomeView.vue";
+import MapView from "@/views/MapView";
 
 const routes = [
   {
@@ -16,7 +16,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL || "/"),
+  history: createWebHistory("/"),
   routes,
 });
 
