@@ -96,7 +96,9 @@ export default {
   },
   computed: {
     filteredPosts() {
-      return this.posts.filter((post) => post.title.includes(this.filterText));
+      return this.posts.filter((post) =>
+        post.title.toLowerCase().includes(this.filterText.toLowerCase())
+      );
     },
     canGoToPrev() {
       return this.page > 1;
